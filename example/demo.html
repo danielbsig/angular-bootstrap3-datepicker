@@ -13,22 +13,51 @@
 
             <div class='form-group'>
               <label>A date with french canadian language</label>
-              <ng-bs3-datepicker id="date1" data-ng-model='date1' language="fr-ca" date-format="YYYY-MMMM-DD"/>
+              <ng-bs3-datepicker id="date1" data-ng-model='date1'
+                language="fr-ca" date-format="YYYY-MM-DD"/>
             </div>
 
             <div class='form-group'>
               <label>A date in canadian english</label>
               <ng-bs3-datepicker id="date2" data-ng-model='date2' language="en-ca"/>
             </div>
+<!--
+
             <div class='form-group'>
               <label>A simple date with another format</label>
               <ng-bs3-datepicker id="date3" data-ng-model='date3' language="fr-ca" date-format="DD/MM/YYYY"/>
             </div>
+
             {{test = 'en-ca'}}
             <div class='form-group'>
               <label>A date in canadian english using an expression</label>
-              <ng-bs3-datepicker id="date2" data-ng-model='date4' language="test"/>
+              <ng-bs3-datepicker id="date4" data-ng-model='date4' language="test"/>
             </div>
+
+            <div class='form-group'>
+              <label>A proper test for a different format</label>
+              <ng-bs3-datepicker id="date5" data-ng-model="date5" date-format="DD. MMMM YYYY" />
+            </div>
+-->
+            <div class='form-group'>
+              <label>Testing if min-date works</label>
+              <ng-bs3-datepicker id="date6"
+                data-ng-model="model.Start"
+                ng-change="onChangeStart(value)"
+                language="is"
+                min-date="currentDate"
+                max-date="selectedEndDate"
+                date-format="DD-MM-YYYY" ></ng-bs3-datepicker>
+            </div>
+            <div class="form-group">
+              <ng-bs3-datepicker id="date7"
+                data-ng-model="model.End"
+                ng-change="onChangeEnd(value)"
+                language="is"
+                min-date="selectedStartDate"
+                date-format="DD-MM-YYYY" ></ng-bs3-datepicker>
+            </div>
+            {{model.Start}}
 
         </div>
     </div>
@@ -38,11 +67,34 @@
     <script src='js/angular.js'></script>
     <script src='js/moment.js'></script>
     <script src='js/fr-ca.js' charset='utf-8'></script>
+    <script src='js/is.js' charset='utf-8'></script>
     <script src='js/ng-bs3-datepicker.js' charset='utf-8'></script>
     <script type='application/javascript'>
         var app = angular.module('demo', ['ng-bs3-datepicker']);
         app.controller('AppCtrl', function($scope){
-          console.log("hey")
+          console.log("hey");
+          $scope.model = {
+            Start: moment(),
+            End: undefined
+          };
+
+          $scope.currentDate  = moment();
+          $scope.selectedEndDate = undefined;
+          $scope.selectedStartDate = undefined;
+
+          $scope.onChangeStart = function onChangeStart(value) {
+            $scope.selectedStartDate = value;
+            console.log("onChangeStart:");
+            console.log(value);
+          };
+
+          $scope.onChangeEnd = function onChangeEnd(value) {
+            // The min/max seems to be exclusive, so we add 1 day 
+            // such that the start and end can be the same value.
+            $scope.selectedEndDate = moment(value).add(1, "days");
+            console.log("onChangeEnd:");
+            console.log(value);
+          };
         });
     </script>
 </body>

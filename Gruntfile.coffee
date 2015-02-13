@@ -67,7 +67,7 @@ module.exports = (grunt) ->
         singleRun: true
         browsers: ['PhantomJS', 'Firefox', 'Chrome']
 
-    # copy files to exemple directory
+    # copy files to example directory
     copy:
       js:
         files: [ flatten:true, expand:true, src: [
@@ -77,15 +77,16 @@ module.exports = (grunt) ->
           'lib/jquery/jquery.js',
           'lib/moment/moment.js',
           'bower_components/moment/locale/fr-ca.js'
+          'bower_components/moment/locale/is.js'
         ], dest: 'example/js' ]
       css:
         files: [ flatten:true, expand:true, src: [
           'dist/ng-bs3-datepicker.css',
-          'lib/font-awesome/css/*.css'
+          'lib/font-awesome/*.css'
           'lib/bootstrap/*.css'
         ], dest: 'example/css' ]
       font:
-        files: [ flatten:true, expand:true, src: [ 'lib/font-awesome/fonts/*' ], dest: 'example/fonts/' ]
+        files: [ flatten:true, expand:true, src: [ 'lib/font-awesome/fontawesome-*' ], dest: 'example/fonts/' ]
 
     'http-server':
         dev:
@@ -114,4 +115,5 @@ module.exports = (grunt) ->
   grunt.registerTask 'test-unit', ['karma:unit']
   grunt.registerTask 'test-system', ['http-server','karma:e2e']
   grunt.registerTask 'build', ['coffee', 'concat', 'uglify', 'copy:*']
-  grunt.registerTask 'default', [ 'clean', 'bower','build','test-unit','test-system' ]
+  grunt.registerTask 'default', [ 'clean', 'bower','build','test-unit' ]
+#  grunt.registerTask 'default', [ 'clean', 'bower','build','test-unit','test-system' ]

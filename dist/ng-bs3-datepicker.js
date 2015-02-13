@@ -3,76 +3,102 @@ var dp;
 
 dp = angular.module('ng-bs3-datepicker', []);
 
-dp.directive('ngBs3Datepicker', function($compile) {
-  return {
-    restrict: 'E',
-    replace: true,
-    template: "<div class='input-group date'>\n  <input type='text' class='form-control'/>\n  <span class='input-group-addon'>\n    <span class='fa fa-calendar'></span>\n  </span>\n</div>",
-    link: function($scope, element, attr) {
-      var attributes, dateFormat, input, resetValue;
-      dateFormat = "";
-      attributes = element.prop("attributes");
-      input = element.find("input");
-      resetValue = false;
-      angular.forEach(attributes, function(e) {
-        if (e.name !== "class") {
-          input.attr(e.name, e.value);
-        }
-        if (e.name === "date-format") {
-          return dateFormat = e.value;
-        }
-      });
-      $scope.$watch(attr.language, function(value) {
-        var language;
-        language = value ? value : input.attr('language');
-        return input.datetimepicker({
-          language: language,
-          pickTime: false,
-          format: dateFormat,
-          icons: {
-            time: 'fa fa-clock-o',
-            date: 'fa fa-calendar',
-            up: 'fa fa-arrow-up',
-            down: 'fa fa-arrow-down'
+dp.directive('ngBs3Datepicker', [
+  '$compile', function($compile) {
+    return {
+      restrict: 'E',
+      scope: {
+        ngChange: "&",
+        ngModel: "=",
+        minDate: "=",
+        maxDate: "="
+      },
+      template: "<div class='input-group date'>\n  <input type='text' class='form-control'/>\n  <span class='input-group-addon'>\n    <span class='fa fa-calendar'></span>\n  </span>\n</div>",
+      link: function($scope, element, attr) {
+        var attributes, dateFormat, input, maxDate, minDate, resetValue;
+        dateFormat = "";
+        minDate = void 0;
+        maxDate = void 0;
+        attributes = element.prop("attributes");
+        input = element.find("input");
+        resetValue = false;
+        angular.forEach(attributes, function(e) {
+          if (!(e.name === "class" || e.name === "id")) {
+            input.attr(e.name, e.value);
+          }
+          if (e.name === "date-format") {
+            return dateFormat = e.value;
+          } else if (e.name === "min-date") {
+            return minDate = e.value;
+          } else if (e.name === "max-date") {
+            return maxDate = e.value;
+          } else if (e.name === "id") {
+            return input.id = e.value + "input";
           }
         });
-      });
-      element.find('.input-group-addon').on('click', function(e) {
-        return element.find('input').focus();
-      });
-      element.on("change.dp", function(e) {
-        return $scope.$apply(function() {
-          var i, obj, objPath, path, _i, _len, _results;
-          if (e.date) {
-            objPath = attr.ngModel.split(".");
-            obj = $scope;
-            _results = [];
-            for (i = _i = 0, _len = objPath.length; _i < _len; i = ++_i) {
-              path = objPath[i];
-              if (!obj[path]) {
-                obj[path] = {};
-              }
-              if (i === objPath.length - 1) {
-                if (resetValue) {
-                  resetValue = false;
-                  _results.push(obj[path] = null);
-                } else {
-                  _results.push(obj[path] = e.date.format(dateFormat));
-                }
-              } else {
-                _results.push(obj = obj[path]);
+        $scope.$watch("minDate", function(value) {
+          console.log("watch minDate");
+          console.log(value);
+          if (value) {
+            dp = input.data("DateTimePicker");
+            if (dp) {
+              console.log("Setting minDate");
+              return dp.setMinDate(value);
+            }
+          }
+        }, true);
+        $scope.$watch("maxDate", function(value) {
+          console.log("watch maxDate");
+          console.log(value);
+          if (value) {
+            dp = input.data("DateTimePicker");
+            if (dp) {
+              console.log("Setting maxDate");
+              return dp.setMaxDate(value);
+            }
+          }
+        }, true);
+        $scope.$watch(attr.language, function(value) {
+          var language;
+          language = value ? value : input.attr('language');
+          return input.datetimepicker({
+            language: language,
+            pickTime: false,
+            format: dateFormat,
+            minDate: $scope.minDate,
+            maxDate: $scope.maxDate,
+            icons: {
+              time: 'fa fa-clock-o',
+              date: 'fa fa-calendar',
+              up: 'fa fa-arrow-up',
+              down: 'fa fa-arrow-down'
+            }
+          });
+        });
+        element.find('.input-group-addon').on('click', function(e) {
+          return element.find('input').focus();
+        });
+        element.on("change.dp", function(e) {
+          console.log("on change dp - before $scope.$apply");
+          dp = input.data("DateTimePicker");
+          return $scope.$apply(function() {
+            if (dp.date) {
+              $scope.ngModel = dp.date.format(dateFormat);
+              if ($scope.ngChange) {
+                return $scope.ngChange({
+                  value: dp.date
+                });
               }
             }
-            return _results;
+          });
+        });
+        $scope.$watch(attr.ngModel, function(newValue, oldValue) {
+          if (oldValue && !newValue) {
+            return resetValue = true;
           }
         });
-      });
-      $scope.$watch(attr.ngModel, function(newValue, oldValue) {
-        if (oldValue && !newValue) {
-          return resetValue = true;
-        }
-      });
-      return $compile(input)($scope);
-    }
-  };
-});
+        return $compile(input)($scope);
+      }
+    };
+  }
+]);

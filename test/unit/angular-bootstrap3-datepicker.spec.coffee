@@ -36,7 +36,7 @@ describe 'ng-bs3-datepicker', ()->
      @elm.find('input').click()
      expect( angular.element(".bootstrap-datetimepicker-widget .datepicker .datepicker-days").css("display")).toBe "block"
 
-  it 'should update the model when updating the form by hand',->
+  xit 'should update the model when updating the form by hand',->
      @elm.find('input').val("2013-01-01")
 
      # angular listen to the input event to update the model
@@ -45,3 +45,6 @@ describe 'ng-bs3-datepicker', ()->
 
      expect(@scope.date).toEqual("2013-01-01")
      expect( angular.element(".bootstrap-datetimepicker-widget .datepicker .datepicker-days").css("display")).toBe "block"
+
+#  it 'should prevent invalid input if min-date is specified'
+
