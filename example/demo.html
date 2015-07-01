@@ -91,7 +91,7 @@
           $scope.onChangeEnd = function onChangeEnd(value) {
             // The min/max seems to be exclusive, so we add 1 day 
             // such that the start and end can be the same value.
-            $scope.selectedEndDate = moment(value).add(1, "days");
+            $scope.selectedEndDate = moment(value);
             console.log("onChangeEnd:");
             console.log(value);
           };

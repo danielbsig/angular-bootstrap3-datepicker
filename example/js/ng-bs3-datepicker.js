@@ -37,23 +37,17 @@ dp.directive('ngBs3Datepicker', [
           }
         });
         $scope.$watch("minDate", function(value) {
-          console.log("watch minDate");
-          console.log(value);
           if (value) {
             dp = input.data("DateTimePicker");
             if (dp) {
-              console.log("Setting minDate");
               return dp.setMinDate(value);
             }
           }
         }, true);
         $scope.$watch("maxDate", function(value) {
-          console.log("watch maxDate");
-          console.log(value);
           if (value) {
             dp = input.data("DateTimePicker");
             if (dp) {
-              console.log("Setting maxDate");
               return dp.setMaxDate(value);
             }
           }
@@ -79,7 +73,6 @@ dp.directive('ngBs3Datepicker', [
           return element.find('input').focus();
         });
         element.on("change.dp", function(e) {
-          console.log("on change dp - before $scope.$apply");
           dp = input.data("DateTimePicker");
           return $scope.$apply(function() {
             if (dp.date) {

@@ -42,22 +42,16 @@ dp.directive 'ngBs3Datepicker', [ '$compile', ($compile)->
     )
 
     $scope.$watch "minDate", (value)->
-      console.log "watch minDate"
-      console.log value
       if value
         dp = input.data("DateTimePicker")
         if dp
-          console.log "Setting minDate"
           dp.setMinDate(value)
     , true
 
     $scope.$watch "maxDate", (value)->
-      console.log "watch maxDate"
-      console.log value
       if value
         dp = input.data("DateTimePicker")
         if dp
-          console.log "Setting maxDate"
           dp.setMaxDate(value)
     , true
 
@@ -82,7 +76,6 @@ dp.directive 'ngBs3Datepicker', [ '$compile', ($compile)->
 
     #update model from date picker change value
     element.on "change.dp",(e)->
-      console.log "on change dp - before $scope.$apply"
       dp = input.data("DateTimePicker")
 
       $scope.$apply ->
